@@ -4,8 +4,7 @@ FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm
 ARG BUILD_DATE
 ARG BRAVE_VERSION
 ARG VERSION
-LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-LABEL maintainer="thelamer"
+LABEL maintainer="nobodywatchin"
 
 # title
 ENV TITLE=Brave
@@ -14,7 +13,7 @@ RUN \
   echo "**** add icon ****" && \
   curl -o \
     /kclient/public/icon.png \
-    https://upload.wikimedia.org/wikipedia/commons/8/8b/Brave_logo.png && \
+    https://upload.wikimedia.org/wikipedia/commons/c/c4/Brave_lion.png && \
   apt-get update && \
   echo "**** install dependencies ****" && \
   apt install --no-install-recommends -y curl gnupg && \
