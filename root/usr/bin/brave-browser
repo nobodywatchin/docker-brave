@@ -1,0 +1,24 @@
+#! /bin/bash
+
+BIN=/usr/bin/brave-browser
+
+# Cleanup
+if ! pgrep brave-browser > /dev/null; then
+  rm -f $HOME/.config/BraveSoftware/Brave-Browser/Singleton*
+fi
+
+# Set binary path
+BIN="/usr/bin/brave-browser"
+
+# Run normally on privileged containers or modified in non-privileged
+if grep -q 'Seccomp:.0' /proc/1/status; then
+  ${BIN} \
+    --password-store=basic \
+    "$@" > /dev/null 2>&1
+else
+  ${BIN} \
+    --password-store=basic \
+    --no-sandbox \
+    --test-type \
+    "$@" > /dev/null 2>&1
+fi
