@@ -1,2 +1,2 @@
 #! /bin/bash
-microsoft-edge ${EDGE_CLI}
+brave-browser ${BRAVE_CLI}
