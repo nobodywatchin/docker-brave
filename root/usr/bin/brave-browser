@@ -12,11 +12,17 @@ fi
 if grep -q 'Seccomp:.0' /proc/1/status; then
   ${BIN} \
     --password-store=basic \
+    --start-fullscreen \
+    --enable-fullscreen-toolbar-reveal \
+    --force-dark-mode \
     "$@" > /dev/null 2>&1
 else
   ${BIN} \
     --password-store=basic \
     --no-sandbox \
+    --start-fullscreen \
+    --enable-fullscreen-toolbar-reveal \
+    --force-dark-mode \
     --test-type \
     "$@" > /dev/null 2>&1
 fi
