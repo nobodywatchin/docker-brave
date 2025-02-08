@@ -2,33 +2,30 @@ FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm
 
 # set version label
 ARG BUILD_DATE
-ARG EDGE_VERSION
+ARG BRAVE_VERSION
 ARG VERSION
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="thelamer"
 
 # title
-ENV TITLE=Edge
+ENV TITLE=Brave
 
 RUN \
   echo "**** add icon ****" && \
   curl -o \
     /kclient/public/icon.png \
-    https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/edge-logo.png && \
+    https://upload.wikimedia.org/wikipedia/commons/8/8b/Brave_logo.png && \
   apt-get update && \
-  echo "**** install edge ****" && \
-  if [ -z ${EDGE_VERSION+x} ]; then \
-    EDGE_VERSION=$(curl -sL https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/ | awk -F'(<a href="microsoft-edge-stable_|_amd64.deb")' '/href=/ {print $2}' | sort --version-sort | tail -1); \
-  fi && \
-  curl -o \
-    /tmp/edge.deb -L \
-    "https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/microsoft-edge-stable_${EDGE_VERSION}_amd64.deb" && \
-  apt install --no-install-recommends -y \
-    /tmp/edge.deb && \
-  echo "**** edge docker tweaks ****" && \
-  mv \
-    /usr/bin/microsoft-edge \
-    /usr/bin/microsoft-edge-real && \
+  echo "**** install dependencies ****" && \
+  apt install --no-install-recommends -y curl gnupg && \
+  echo "**** add Brave repository ****" && \
+  curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg \
+    https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg && \
+  echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" \
+    | tee /etc/apt/sources.list.d/brave-browser-release.list && \
+  apt-get update && \
+  echo "**** install Brave ****" && \
+  apt install --no-install-recommends -y brave-browser && \
   echo "**** cleanup ****" && \
   apt-get autoclean && \
   rm -rf \
